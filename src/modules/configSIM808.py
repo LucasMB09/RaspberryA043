@@ -18,10 +18,19 @@ class SIM808:
         return decoded
 
     def get_gps_location(self):
-        self.send_command('AT+CGNSPWR=1', wait=2)  # Encender GPS
+        self.send_command('AT+CGNSPWR=1', wait=2)
         response = self.send_command('AT+CGNSINF', wait=2)
         for line in response:
+            line = line.strip()
             if '+CGNSINF' in line:
-                data = line.split(',')
-                return {'latitude': data[4], 'longitude': data[5]}  # Corrige si el índice es diferente
+                try:
+                    data = line.split(',')
+                    print("Datos GPS (split):", data)
+                    latitude = data[3] 
+                    longitude = data[4]
+                    return {'latitude': latitude, 'longitude': longitude}
+                except IndexError as e:
+                    print("Error de índice al obtener coordenadas:", e)
+                    return None
         return None
+
