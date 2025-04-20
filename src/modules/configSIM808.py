@@ -7,11 +7,12 @@ class SIM808:
         self.ser = serial.Serial(port, baudrate, timeout=timeout)
 
     def send_command(self, command, wait=1):
+        """Envía un comando AT al módulo y espera la respuesta"""
         print("Comando recibido:" + command)
         self.ser.write((command + '\r\n').encode())
         time.sleep(wait)
         response = self.ser.readlines()
-        print(response)
+        print(self.ser.readlines())
         return response
 
     def get_gps_location(self):
@@ -22,6 +23,5 @@ class SIM808:
         for line in response:
             if line.startswith(b'+CGNSINF:'):
                 data = line.decode().split(',')
-                print(f'DEBUG: Data: {data}')
-                return {'latitude': data[3], 'longitude': data[4]}
+                return {'latitude': data[4], 'longitude': data[5]}
         return None

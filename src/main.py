@@ -11,7 +11,6 @@ if __name__ == "__main__":
     # Módulo GPS
     gps_data = GPSData(sim808)
     latitud, longitud = gps_data.get_location()
-    print(f'DEBUG: Latitud: {latitud}, Longitud: {longitud}')
 
     db = mysql.connector.connect(
         host = IP_MV,  # Cambia esto por la IP de tu VM en Azure
