@@ -23,5 +23,5 @@ class SIM808:
         for line in response:
             if line.startswith(b'+CGNSINF:'):
                 data = line.decode().split(',')
-                return {'latitude': data[4], 'longitude': data[5]}
+                return {'latitude': data[3], 'longitude': data[4]}
         return None
