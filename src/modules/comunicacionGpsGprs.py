@@ -5,5 +5,7 @@ class GPSData:
     def get_location(self):
         location = self.sim808.get_gps_location()
         if location:
-            return f"{location['latitude']}, {location['longitude']}"
+            print(location)
+            return location['latitude'], location['longitude']
+        print("No se pudo obtener la ubicación")
         return "No se pudo obtener la ubicación"
