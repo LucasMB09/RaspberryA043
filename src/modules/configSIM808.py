@@ -2,35 +2,23 @@ import serial
 import time
 
 class SIM808:
-    def __init__(self, port='/dev/ttyS0', baudrate=115200, timeout=5):
-        print("Inicializando módulo de configuración")
+    def __init__(self, port='/dev/ttyS0', baudrate=115200, timeout=1):
         self.ser = serial.Serial(port, baudrate, timeout=timeout)
-        time.sleep(2)
 
     def send_command(self, command, wait=1):
-        print(f"Enviando comando: {command}")
-        self.ser.flushInput()
+        """Envía un comando AT al módulo y espera la respuesta"""
         self.ser.write((command + '\r\n').encode())
         time.sleep(wait)
         response = self.ser.readlines()
-        decoded = [line.decode(errors='ignore').strip() for line in response]
-        print("Respuesta recibida:", decoded)
-        return decoded
+        return response
 
     def get_gps_location(self):
-        self.send_command('AT+CGNSPWR=1', wait=2)
-        response = self.send_command('AT+CGNSINF', wait=2)
+        """Obtiene la ubicación GPS actual"""
+        self.send_command('AT+CGNSPWR=1')  # Encender GPS
+        time.sleep(2)
+        response = self.send_command('AT+CGNSINF')  # Obtener datos GPS
         for line in response:
-            line = line.strip()
-            if '+CGNSINF' in line:
-                try:
-                    data = line.split(',')
-                    print("Datos GPS (split):", data)
-                    latitude = data[3] 
-                    longitude = data[4]
-                    return {'latitude': latitude, 'longitude': longitude}
-                except IndexError as e:
-                    print("Error de índice al obtener coordenadas:", e)
-                    return None
+            if line.startswith(b'+CGNSINF:'):
+                data = line.decode().split(',')
+                return {'latitude': data[3], 'longitude': data[4]}
         return None
-
