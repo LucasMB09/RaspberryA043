@@ -12,6 +12,11 @@ if __name__ == "__main__":
     gps_data = GPSData(sim808)
     latitud, longitud = gps_data.get_location()
 
+    if not latitud or not longitud:
+        print("Error: No se obtuvo ubicación GPS.")
+        exit(1)
+
+
     db = mysql.connector.connect(
         host = IP_MV,  # Cambia esto por la IP de tu VM en Azure
         user = USER_ULISES,

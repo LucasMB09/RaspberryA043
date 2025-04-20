@@ -23,6 +23,5 @@ class SIM808:
         for line in response:
             if '+CGNSINF' in line:
                 data = line.split(',')
-                print("Datos GPS:", data)
                 return {'latitude': data[4], 'longitude': data[5]}  # Corrige si el índice es diferente
         return None
